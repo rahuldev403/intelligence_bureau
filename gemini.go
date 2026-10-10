@@ -74,7 +74,7 @@ type GeminiClient struct {
 func NewGeminiClient(apiKey string) *GeminiClient {
 	return &GeminiClient{
 		apiKey:     apiKey,
-		chatModel:  envOr("GEMINI_MODEL", "gemini-2.5-flash"),
+		chatModel:  envOr("GEMINI_MODEL", "gemini-3.8-flash"),
 		embedModel: envOr("GEMINI_EMBED_MODEL", "gemini-embedding-001"),
 		http:       &http.Client{Timeout: 60 * time.Second},
 	}
