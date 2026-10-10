@@ -1,0 +1,58 @@
+OPERATION PAPERCLIP — DECLASSIFIED CASE FILE
+Bureau Reference: IB-1945-OP7
+
+SUMMARY
+Operation Paperclip was a secret United States intelligence program in which more than 1,600
+German scientists, engineers, and technicians were recruited from Nazi Germany and brought to
+the United States after World War II ended in 1945. The primary purpose was to exploit their
+scientific expertise and prevent it from falling into the hands of the Soviet Union, the United
+Kingdom, or a revived Germany.
+
+KEY PERSONNEL
+- Wernher von Braun: Lead rocket engineer who developed the V-2 ballistic missile for the Third
+  Reich. After recruitment, he became the chief architect of NASA's Saturn V rocket, which carried
+  Apollo 11 astronauts to the Moon in July 1969.
+- Hubertus Strughold: Recruited as a specialist in aviation medicine. Later named "Father of Space
+  Medicine" by the USAF. His wartime experiments on concentration camp prisoners were suppressed
+  by US authorities during his vetting.
+- Walter Dornberger: V-2 program military commander. Recruited by the US Army, later worked for
+  Bell Aircraft Corporation.
+
+TIMELINE
+1945-MAY    Germany surrenders. Allied intelligence teams race to secure scientists before
+            Soviet forces arrive.
+1945-JUL    Operation OVERCAST (predecessor to Paperclip) authorised by Joint Chiefs of Staff.
+1945-SEP    First group of 88 German specialists arrives in the United States.
+1946-MAR    Program renamed Operation Paperclip — named after the paperclip agents attached to
+            the personnel files of approved candidates to bypass State Department denials.
+1947        President Truman officially sanctions the program despite earlier opposition.
+1955        Over 760 German scientists have received US citizenship under the program.
+1990        Program details fully declassified and released to the public.
+
+LOCATIONS
+- Fort Bliss, Texas: Primary base for von Braun and his rocket team (1945–1950).
+- Wright-Patterson Air Force Base, Ohio: Aviation medicine and aeronautics recruits.
+- Redstone Arsenal, Alabama: Transferred 1950; became the centre of US ballistic missile development.
+- White Sands Proving Ground, New Mexico: V-2 launch tests conducted 1946–1951.
+
+OUTCOME
+The recruited scientists contributed directly to:
+  1. The US ICBM program (Redstone, Jupiter, Pershing missiles).
+  2. NASA's space program — Saturn V remains the most powerful rocket ever flown.
+  3. Early US research in aviation medicine, radar, and chemical weapons defence.
+
+CONTROVERSY
+The State Department and the FBI repeatedly flagged recruits for suspected war crimes and
+Nazi Party membership. Joint Intelligence Objectives Agency (JIOA) staff systematically
+altered and cleansed dossiers to remove incriminating evidence, allowing candidates to pass
+immigration and security reviews. The decision was driven by Cold War strategic priorities
+over moral considerations.
+
+RELATED FILES
+- IB-1946-SOVIET: Soviet counterpart — Operation OSOAVIAKHIM, which forcibly relocated 2,200
+  German scientists to the USSR in a single night on 22 October 1946.
+- IB-1969-APOLLO: Moon landing mission files referencing Paperclip recruits at NASA.
+
+CLASSIFICATION STATUS: DECLASSIFIED 1990
+BUREAU ANALYST: K-8
+

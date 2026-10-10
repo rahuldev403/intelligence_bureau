@@ -47,9 +47,9 @@ export default function Home() {
         <section aria-labelledby="gal-h">
           <h2 id="gal-h" className="section-title">▶ FIELD PHOTOS</h2>
           <div className="gallery">
-            <MediaSlot src="/media/slot-1.gif" alt="Field photo A" label="SLOT 03 // slot-1.gif" ratio="4 / 3" caption="EXHIBIT A" />
-            <MediaSlot src="/media/slot-2.gif" alt="Field photo B" label="SLOT 04 // slot-2.gif" ratio="4 / 3" caption="EXHIBIT B" />
-            <MediaSlot src="/media/slot-3.gif" alt="Field photo C" label="SLOT 05 // slot-3.gif" ratio="4 / 3" caption="EXHIBIT C" />
+            <MediaSlot src="/media/slot-1.mp4" alt="Field photo A" label="SLOT 03 // slot-1.gif" ratio="4 / 3" caption="EXHIBIT A" />
+            <MediaSlot src="/media/slot-2.mp4" alt="Field photo B" label="SLOT 04 // slot-2.gif" ratio="4 / 3" caption="EXHIBIT B" />
+            <MediaSlot src="/media/slot-3.mp4" alt="Field photo C" label="SLOT 05 // slot-3.gif" ratio="4 / 3" caption="EXHIBIT C" />
           </div>
         </section>
       </main>
