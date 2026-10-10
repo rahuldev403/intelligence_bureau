@@ -160,3 +160,4 @@ func truncate(s string, n int) string {
 	}
 	return s[:n] + "..."
 }
+
