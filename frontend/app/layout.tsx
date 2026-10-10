@@ -15,6 +15,7 @@ const terminal = VT323({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: "Retro Intelligence Bureau // RAG Agent",
   description:
     "A 1980s-style AI field agent that answers questions from your classified case files. Go + pgvector + Gemini + Next.js.",
