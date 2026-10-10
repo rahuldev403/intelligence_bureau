@@ -50,7 +50,6 @@ function EvidenceModal({
 }) {
   function close() { dialogRef.current?.close(); }
 
-  // Close on backdrop click
   function onDialogClick(e: React.MouseEvent<HTMLDialogElement>) {
     const rect = dialogRef.current?.getBoundingClientRect();
     if (!rect) return;
@@ -83,8 +82,8 @@ function EvidenceModal({
   );
 }
 
-/* ---------------- past answers history ---------------- */
-type HistoryEntry = {
+/* ---------------- history types ---------------- */
+export type HistoryEntry = {
   id: number;
   question: string;
   report: string;
@@ -92,6 +91,7 @@ type HistoryEntry = {
   timestamp: string;
 };
 
+/* ---------------- past answers history (full-width) ---------------- */
 function HistoryPanel({
   entries,
   onViewEvidence,
@@ -101,8 +101,8 @@ function HistoryPanel({
 }) {
   if (entries.length === 0) return null;
   return (
-    <div className="history-panel">
-      <h3 className="history-title">▶ PAST TRANSMISSIONS — {entries.length}</h3>
+    <section className="history-panel" aria-labelledby="hist-h">
+      <h2 id="hist-h" className="history-title">▶ PAST TRANSMISSIONS — {entries.length}</h2>
       <ul className="history-list">
         {entries.map((entry) => (
           <li key={entry.id} className="history-entry pixel-box">
@@ -122,7 +122,7 @@ function HistoryPanel({
           </li>
         ))}
       </ul>
-    </div>
+    </section>
   );
 }
 
@@ -132,7 +132,6 @@ function UploadPanel({ onUploaded }: { onUploaded: () => void }) {
   const [dragging, setDragging] = useState(false);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -193,10 +192,7 @@ function UploadPanel({ onUploaded }: { onUploaded: () => void }) {
             <span>{file ? `LOADED: ${file.name}` : "DROP .TXT / .MD FILE OR CLICK"}</span>
           </label>
           <input
-            ref={fileRef}
-            id="file"
-            name="file"
-            type="file"
+            id="file" name="file" type="file"
             accept=".txt,.md,.csv,.json,text/*"
             className="visually-hidden"
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
@@ -222,20 +218,17 @@ function UploadPanel({ onUploaded }: { onUploaded: () => void }) {
 /* ---------------- investigate ---------------- */
 let historyCounter = 0;
 
-function InvestigatePanel() {
+type InvestigateProps = {
+  onNewEntry: (entry: HistoryEntry) => void;
+  onOpenModal: (ev: Evidence[]) => void;
+};
+
+function InvestigatePanel({ onNewEntry, onOpenModal }: InvestigateProps) {
   const [busy, setBusy] = useState(false);
   const [report, setReport] = useState("");
   const [error, setError] = useState("");
   const [evidence, setEvidence] = useState<Evidence[]>([]);
-  const [history, setHistory] = useState<HistoryEntry[]>([]);
-  const [modalEvidence, setModalEvidence] = useState<Evidence[]>([]);
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const typed = useTypewriter(report);
-
-  function openModal(ev: Evidence[]) {
-    setModalEvidence(ev);
-    dialogRef.current?.showModal();
-  }
 
   function clearCurrent() {
     setReport("");
@@ -256,14 +249,13 @@ function InvestigatePanel() {
       const res = await api.investigate(q);
       setReport(res.agent_report);
       setEvidence(res.evidence ?? []);
-      // Prepend to history
-      setHistory((prev) => [{
+      onNewEntry({
         id: ++historyCounter,
         question: q,
         report: res.agent_report,
         evidence: res.evidence ?? [],
         timestamp: new Date().toLocaleTimeString(),
-      }, ...prev]);
+      });
       form.reset();
     } catch (err) {
       setError((err as Error).message.toUpperCase());
@@ -273,79 +265,52 @@ function InvestigatePanel() {
   }
 
   return (
-    <>
-      <section className="pixel-box" aria-labelledby="ask-h">
-        <h2 id="ask-h">▶ INTERROGATE THE ARCHIVE</h2>
-        <form onSubmit={submit}>
-          <div className="field">
-            <label htmlFor="question">Your question, agent</label>
-            <div className="prompt-row">
-              <span className="prompt" aria-hidden="true">&gt;</span>
-              <input
-                id="question" name="question" type="text"
-                required maxLength={500}
-                placeholder="Who was at Pier 9?"
-                autoComplete="off" enterKeyHint="send"
-              />
-            </div>
-          </div>
-          <button type="submit" className="btn btn-amber" disabled={busy}>
-            {busy ? "INVESTIGATING..." : "INVESTIGATE"}
-          </button>
-        </form>
-
-        <div className="terminal-wrap">
-          {/* MEDIA SLOT 02 — sidekick */}
-          <MediaSlot
-            src="/media/robot.jpg"
-            alt="Pixel-art robot analyst reading a case folder"
-            label="SLOT 02 // robot.jpg"
-            className="sidekick"
-          />
-          <div className="terminal" aria-live="polite" aria-busy={busy}>
-            {busy && <p className="blink">DECRYPTING ARCHIVES<span className="dots" /></p>}
-            {error && <p className="err">✖ {error}</p>}
-            {!busy && !error && !report && (
-              <p className="dim">AGENT K-8 STANDING BY. AWAITING QUERY...</p>
-            )}
-            {report && <p className="report">{typed}<span className="cursor">█</span></p>}
+    <section className="pixel-box" aria-labelledby="ask-h">
+      <h2 id="ask-h">▶ INTERROGATE THE ARCHIVE</h2>
+      <form onSubmit={submit}>
+        <div className="field">
+          <label htmlFor="question">Your question, agent</label>
+          <div className="prompt-row">
+            <span className="prompt" aria-hidden="true">&gt;</span>
+            <input
+              id="question" name="question" type="text"
+              required maxLength={500}
+              placeholder="Who was at Pier 9?"
+              autoComplete="off" enterKeyHint="send"
+            />
           </div>
         </div>
+        <button type="submit" className="btn btn-amber" disabled={busy}>
+          {busy ? "INVESTIGATING..." : "INVESTIGATE"}
+        </button>
+      </form>
 
-        {/* Action bar shown after a result */}
-        {(report || error) && !busy && (
-          <div className="result-actions">
-            {evidence.length > 0 && (
-              <button className="btn btn-sm btn-amber" onClick={() => openModal(evidence)}>
-                VIEW {evidence.length} EXHIBITS
-              </button>
-            )}
-            <button className="btn btn-sm" onClick={clearCurrent}>
-              CLEAR
+      <div className="terminal-wrap">
+        <MediaSlot src="/media/robot.jpg" alt="Pixel-art robot analyst" label="SLOT 02" className="sidekick" />
+        <div className="terminal" aria-live="polite" aria-busy={busy}>
+          {busy && <p className="blink">DECRYPTING ARCHIVES<span className="dots" /></p>}
+          {error && <p className="err">✖ {error}</p>}
+          {!busy && !error && !report && <p className="dim">AGENT K-8 STANDING BY. AWAITING QUERY...</p>}
+          {report && <p className="report">{typed}<span className="cursor">█</span></p>}
+        </div>
+      </div>
+
+      {(report || error) && !busy && (
+        <div className="result-actions">
+          {evidence.length > 0 && (
+            <button className="btn btn-sm btn-amber" onClick={() => onOpenModal(evidence)}>
+              VIEW {evidence.length} EXHIBITS
             </button>
-          </div>
-        )}
-      </section>
-
-      {/* History */}
-      <HistoryPanel entries={history} onViewEvidence={openModal} />
-
-      {/* Evidence modal — one shared instance */}
-      <EvidenceModal evidence={modalEvidence} dialogRef={dialogRef} />
-    </>
+          )}
+          <button className="btn btn-sm" onClick={clearCurrent}>CLEAR</button>
+        </div>
+      )}
+    </section>
   );
 }
 
 /* ---------------- archive ---------------- */
-function Archive({
-  cases,
-  error,
-  onDelete,
-}: {
-  cases: CaseFile[] | null;
-  error: string;
-  onDelete: (id: number) => void;
-}) {
+function Archive({ cases, error, onDelete }: { cases: CaseFile[] | null; error: string; onDelete: (id: number) => void }) {
   return (
     <section className="pixel-box" aria-labelledby="arch-h">
       <h2 id="arch-h">▶ THE ARCHIVES</h2>
@@ -360,11 +325,7 @@ function Archive({
               <strong>{c.title}</strong>
               <small>{c.chunks} CHUNKS · {new Date(c.created_at).toLocaleDateString()}</small>
             </div>
-            <button
-              className="btn btn-red btn-sm"
-              onClick={() => onDelete(c.id)}
-              aria-label={`Shred ${c.title}`}
-            >
+            <button className="btn btn-red btn-sm" onClick={() => onDelete(c.id)} aria-label={`Shred ${c.title}`}>
               SHRED
             </button>
           </li>
@@ -374,21 +335,30 @@ function Archive({
   );
 }
 
-/* ---------------- root ---------------- */
+/* ---------------- root (controls full-width layout) ---------------- */
 export default function Bureau() {
   const [cases, setCases] = useState<CaseFile[] | null>(null);
   const [archiveErr, setArchiveErr] = useState("");
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [modalEvidence, setModalEvidence] = useState<Evidence[]>([]);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   const refresh = useCallback(() => {
-    api
-      .listCases()
+    api.listCases()
       .then((c) => { setCases(c); setArchiveErr(""); })
-      .catch(() =>
-        setArchiveErr("CANNOT REACH ARCHIVE. IS THE GO API RUNNING ON :8080?")
-      );
+      .catch(() => setArchiveErr("CANNOT REACH ARCHIVE. IS THE GO API RUNNING ON :8080?"));
   }, []);
 
   useEffect(() => { refresh(); }, [refresh]);
+
+  function addEntry(entry: HistoryEntry) {
+    setHistory((prev) => [entry, ...prev]);
+  }
+
+  function openModal(ev: Evidence[]) {
+    setModalEvidence(ev);
+    dialogRef.current?.showModal();
+  }
 
   async function shred(id: number) {
     if (!confirm("Shred this case file permanently?")) return;
@@ -398,11 +368,20 @@ export default function Bureau() {
 
   return (
     <>
+      {/* Two-column panel row */}
       <div className="grid">
         <UploadPanel onUploaded={refresh} />
-        <InvestigatePanel />
+        <InvestigatePanel onNewEntry={addEntry} onOpenModal={openModal} />
       </div>
+
+      {/* Full-width history — OUTSIDE the grid */}
+      <HistoryPanel entries={history} onViewEvidence={openModal} />
+
+      {/* Full-width archive */}
       <Archive cases={cases} error={archiveErr} onDelete={shred} />
+
+      {/* Shared modal */}
+      <EvidenceModal evidence={modalEvidence} dialogRef={dialogRef} />
     </>
   );
 }
