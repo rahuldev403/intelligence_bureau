@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Retro Intelligence Bureau // RAG Agent</title>
+  <meta name="description" content="A 1980s-style AI intelligence agent that answers questions from your classified case files. Go + pgvector + Gemini.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="media/agent.jpg">
+</head>
+<body>
+  <div class="crt" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <figure class="media-slot avatar" data-label="AGENT MASCOT">
+        <img src="media/agent.jpg" alt="Pixel-art secret agent mascot" width="96" height="96">
+      </figure>
+      <div>
+        <p class="eyebrow">EST. 1984 // CLEARANCE LEVEL: ULTRA</p>
+        <h1 class="glitch" data-text="RETRO INTELLIGENCE BUREAU">RETRO INTELLIGENCE BUREAU</h1>
+        <p class="tagline">AI field agent &bull; vector archives &bull; zero nonsense<span class="cursor">_</span></p>
+      </div>
+    </div>
+    <div class="status-led" id="status" role="status">
+      <span class="led" aria-hidden="true"></span><span id="status-text">CONNECTING...</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- MEDIA SLOT 01: hero banner — swap media/hero.jpg for your own cartoon / GIF -->
+    <section class="hero">
+      <figure class="media-slot hero-media" data-label="MEDIA SLOT 01 // HERO BANNER (16:9)">
+        <img src="media/hero.jpg" alt="Pixel-art 1980s spy headquarters with a glowing green CRT terminal" width="1376" height="768" fetchpriority="high">
+        <figcaption class="stamp">TOP SECRET</figcaption>
+      </figure>
+      <div class="hero-copy pixel-box">
+        <h2>MISSION BRIEFING</h2>
+        <ol class="steps">
+          <li><span>01</span> Feed the bureau your case files.</li>
+          <li><span>02</span> Files are shredded into chunks &amp; turned into vectors.</li>
+          <li><span>03</span> Ask a question. Agent K-8 pulls the evidence &amp; reports.</li>
+        </ol>
+        <p class="tech">GO &middot; CHI &middot; POSTGRES + PGVECTOR &middot; GEMINI</p>
+      </div>
+    </section>
+
+    <div class="grid">
+      <!-- UPLOAD -->
+      <section class="pixel-box" aria-labelledby="upload-h">
+        <h2 id="upload-h">&#9654; FILE A CASE</h2>
+        <form id="upload-form" action="/api/v1/upload" method="POST" enctype="multipart/form-data">
+          <div class="field">
+            <label for="title">Case title</label>
+            <input id="title" name="title" type="text" maxlength="120" placeholder="OPERATION NIGHTOWL" autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label for="file" class="dropzone" id="dropzone">
+              <span class="drop-icon" aria-hidden="true">&#128193;</span>
+              <span id="drop-text">DROP .TXT / .MD FILE OR CLICK</span>
+            </label>
+            <input id="file" name="file" type="file" accept=".txt,.md,.csv,.json,text/*" class="visually-hidden">
+          </div>
+
+          <p class="or">&mdash; OR PASTE INTEL &mdash;</p>
+
+          <div class="field">
+            <label for="content">Raw intel</label>
+            <textarea id="content" name="content" rows="6" placeholder="Subject was seen at Pier 9 at 0300 hours..."></textarea>
+          </div>
+
+          <button type="submit" class="btn">ARCHIVE FILE</button>
+          <p class="msg" id="upload-msg" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <!-- INVESTIGATE -->
+      <section class="pixel-box" aria-labelledby="ask-h">
+        <h2 id="ask-h">&#9654; INTERROGATE THE ARCHIVE</h2>
+        <form id="ask-form" action="/api/v1/investigate" method="POST">
+          <div class="field">
+            <label for="question">Your question, agent</label>
+            <div class="prompt-row">
+              <span class="prompt" aria-hidden="true">&gt;</span>
+              <input id="question" name="question" type="text" required maxlength="500"
+                     placeholder="Who was at Pier 9?" autocomplete="off" enterkeyhint="send">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-amber">INVESTIGATE</button>
+        </form>
+
+        <div class="terminal-wrap">
+          <!-- MEDIA SLOT 02: sidekick — swap media/robot.jpg -->
+          <figure class="media-slot sidekick" data-label="MEDIA SLOT 02">
+            <img src="media/robot.jpg" alt="Pixel-art robot analyst reading a case folder" width="160" height="160" loading="lazy">
+          </figure>
+          <div class="terminal" id="report" aria-live="polite" aria-busy="false">
+            <p class="dim">AGENT K-8 STANDING BY. AWAITING QUERY...</p>
+          </div>
+        </div>
+
+        <details class="evidence" id="evidence-box" hidden>
+          <summary>VIEW EVIDENCE EXHIBITS</summary>
+          <ol id="evidence"></ol>
+        </details>
+      </section>
+    </div>
+
+    <!-- ARCHIVE -->
+    <section class="pixel-box" aria-labelledby="arch-h">
+      <h2 id="arch-h">&#9654; THE ARCHIVES</h2>
+      <ul class="archive" id="archive">
+        <li class="dim">LOADING...</li>
+      </ul>
+    </section>
+
+    <!-- MEDIA GALLERY: drop your own cartoons / GIFs into web/media as slot-1.gif, slot-2.gif, slot-3.gif -->
+    <section aria-labelledby="gal-h">
+      <h2 id="gal-h" class="section-title">&#9654; FIELD PHOTOS</h2>
+      <div class="gallery">
+        <figure class="media-slot" data-label="MEDIA SLOT 03 // slot-1.gif">
+          <img src="media/slot-1.gif" alt="Field photo 1" loading="lazy">
+          <figcaption>EXHIBIT A</figcaption>
+        </figure>
+        <figure class="media-slot" data-label="MEDIA SLOT 04 // slot-2.gif">
+          <img src="media/slot-2.gif" alt="Field photo 2" loading="lazy">
+          <figcaption>EXHIBIT B</figcaption>
+        </figure>
+        <figure class="media-slot" data-label="MEDIA SLOT 05 // slot-3.gif">
+          <img src="media/slot-3.gif" alt="Field photo 3" loading="lazy">
+          <figcaption>EXHIBIT C</figcaption>
+        </figure>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 1984&ndash;2026 RETRO INTELLIGENCE BUREAU &bull; BUILT WITH GO BY <a href="https://github.com/rahuldev403">@RAHULDEV403</a></p>
+    <p class="dim">THIS TERMINAL WILL SELF-DESTRUCT IN ... JUST KIDDING.</p>
+  </footer>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
