@@ -38,14 +38,3 @@ On startup the API creates the tables automatically.
 | POST | `/api/v1/upload` | multipart `file` (+ `title`) **or** JSON `{title, content}` |
 | POST | `/api/v1/investigate` | JSON `{question}` → `{agent_report, evidence[]}` |
 | DELETE | `/api/v1/cases/{id}` | – |
-
-## 🎨 Media slots (for your cartoons / GIFs)
-
-Put files in `frontend/public/media/`. If a file is missing, the slot shows a pixel-art "INSERT MEDIA" placeholder instead.
-
-| Slot | File | Where it appears |
-|---|---|---|
-| Mascot | `agent.jpg` | header avatar |
-| 01 | `hero.jpg` (16:9) | hero banner |
-| 02 | `robot.jpg` (1:1) | next to the agent terminal |
-| 03–05 | `slot-1.gif`, `slot-2.gif`, `slot-3.gif` (4:3) | "Field Photos" gallery |
