@@ -2,9 +2,7 @@ package main
 
 import (
 	"context"
-	"embed"
 	"fmt"
-	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -18,9 +16,6 @@ import (
 	"github.com/joho/godotenv"
 	pgxvec "github.com/pgvector/pgvector-go/pgx"
 )
-
-//go:embed web
-var webFS embed.FS
 
 type Server struct {
 	Router *chi.Mux
@@ -58,7 +53,7 @@ func main() {
 	s.Router.Use(middleware.Recoverer)
 	s.Router.Use(middleware.Timeout(90 * time.Second))
 	s.Router.Use(cors.Handler(cors.Options{
-		AllowedOrigins: []string{"http://localhost:3000", "http://localhost:8080"},
+		AllowedOrigins: []string{envOr("FRONTEND_ORIGIN", "http://localhost:3000")},
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{"Accept", "Authorization", "Content-Type"},
 	}))
@@ -105,11 +100,4 @@ func (s *Server) setupRoutes() {
 		r.Post("/upload", s.handleUploadCaseFile)
 		r.Post("/investigate", s.handleAgentInvestigation)
 	})
-
-	// Retro pixel frontend (embedded into the binary).
-	static, err := fs.Sub(webFS, "web")
-	if err != nil {
-		log.Fatal(err)
-	}
-	s.Router.Handle("/*", http.FileServer(http.FS(static)))
 }
